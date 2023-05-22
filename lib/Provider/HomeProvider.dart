@@ -6,6 +6,8 @@ import 'package:musicsoul/Screens/Home/home.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class HomeProvider extends ChangeNotifier {
+  //to show and hide the options menu
+  bool isMenuActive = false;
   //Animation elements
   TickerProvider vsync;
   Duration cduration, tduration;
@@ -17,6 +19,38 @@ class HomeProvider extends ChangeNotifier {
   late Animation<double> cAnimation, tAnimation;
   int? currentIndex;
   double playerTransformValue = 0.1;
+  //for changing widget when scrolling
+  bool isPlayer = false;
+  void setMenuActive() {
+    if (isMenuActive) {
+      isMenuActive = false;
+    } else {
+      isMenuActive = true;
+    }
+    notifyListeners();
+  }
+
+  void changeUp() {
+    if (!isPlayer) {
+      isPlayer = true;
+      notifyListeners();
+      print("Up");
+    }
+  }
+
+  void changeDown() {
+    if (isPlayer) {
+      isPlayer = false;
+      notifyListeners();
+      print("Down");
+    }
+  }
+
+  void setCurrentIndex(int index) {
+    currentIndex = index;
+    notifyListeners();
+  }
+
   HomeProvider({
     required this.vsync,
     required this.cduration,

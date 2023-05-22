@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicsoul/Provider/MediaPlayerProvider.dart';
 import 'package:provider/provider.dart';
-
-import 'Components/BottomBar.dart';
 import 'Components/ScreenBasicElements.dart';
-import 'Provider/HomeProvider.dart';
 import 'Provider/MainProvider.dart';
 import 'Screens/Home/home.dart';
 
@@ -30,15 +27,18 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: ((context) => MainProvider()),
           ),
+          ChangeNotifierProvider(
+            create: (context) => MediaPlayerProvider(),
+          )
         ],
-        child: HomePage(),
+        child: const HomePage(),
       ),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -51,42 +51,30 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    home = const Home();
-    screens = [home, Text("Albums"), Text("Playlists"), Text("Favourites")];
+
+    screens = [
+      const Home(),
+      const Text("Albums"),
+      const Text("Playlists"),
+      const Text("Favourites")
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     initialize(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(23, 28, 38, 1),
-        title: const Text(
-          "Music Soul",
-          style: TextStyle(fontFamily: "Trajan Pro "),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: customWidth(size: 0.03)),
-            child: const Icon(Icons.search),
-          )
-        ],
-      ),
-      drawer: Drawer(),
+      appBar: customAppBar(),
+      drawer: const Drawer(),
       backgroundColor: const Color.fromRGBO(253, 253, 253, 1),
+      //All the bottom bar screens in stack
       body: Center(
           child: Consumer<MainProvider>(
               builder: ((context, provider, child) => IndexedStack(
-                    children: [
-                      home,
-                      Text("Albums"),
-                      Text("Playlists"),
-                      Text("Favourites")
-                    ],
                     index: provider.indexSelected,
+                    children: screens,
                   )))),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: const BottomBar(),
     );
   }
 }
-   // screens.elementAt(provider.indexSelected)))

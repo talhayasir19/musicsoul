@@ -3,7 +3,7 @@ import 'package:musicsoul/Provider/MediaPlayerProvider.dart';
 import 'package:provider/provider.dart';
 import 'Components/ScreenBasicElements.dart';
 import 'Provider/MainProvider.dart';
-import 'Screens/Home/home.dart';
+import 'Screens/Home Screen/home.dart';
 
 void main() {
   runApp(const MyApp());

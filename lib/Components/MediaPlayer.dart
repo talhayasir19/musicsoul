@@ -10,7 +10,7 @@ import 'package:musicsoul/Provider/HomeProvider.dart';
 import 'package:musicsoul/Provider/MediaPlayerProvider.dart';
 import 'package:provider/provider.dart';
 
-import '../Screens/Home/home.dart';
+import '../Screens/Home Screen/home.dart';
 import 'ScreenBasicElements.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:volume_controller/volume_controller.dart';

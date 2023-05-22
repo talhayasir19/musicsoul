@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:musicsoul/Screens/Home/home.dart';
 
 class MediaPlayerProvider extends ChangeNotifier {
   IconData playpause = Icons.pause;

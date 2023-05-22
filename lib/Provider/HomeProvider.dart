@@ -2,8 +2,10 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:musicsoul/Components/MediaPlayer.dart';
-import 'package:musicsoul/Screens/Home/home.dart';
+
 import 'package:on_audio_query/on_audio_query.dart';
+
+import '../Screens/Home Screen/home.dart';
 
 class HomeProvider extends ChangeNotifier {
   //to show and hide the options menu

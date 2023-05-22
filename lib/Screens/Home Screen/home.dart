@@ -2,7 +2,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:musicsoul/Components/MediaPlayer.dart';
 import 'package:musicsoul/Provider/HomeProvider.dart';
 import 'package:musicsoul/Provider/MediaPlayerProvider.dart';
-import 'package:musicsoul/Screens/Home/homeWidgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +9,8 @@ import 'package:provider/provider.dart';
 import '../../Components/ScreenBasicElements.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+
+import 'homeWidgets.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

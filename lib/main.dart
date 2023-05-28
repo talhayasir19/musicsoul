@@ -93,6 +93,7 @@ class _HomePageState extends State<HomePage> {
                   IndexedStack(
                     index: provider.indexSelected,
                     children: screens,
+                    //jfajf
                   ),
                   //Bottom media player which will be expandable
                 ],
@@ -101,7 +102,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-// //Bottom Player
+ //Bottom Player
 //             SizedBox.expand(
 //               //draggable scrollable sheet to make it scrollable up and down
 //               child: DraggableScrollableSheet(

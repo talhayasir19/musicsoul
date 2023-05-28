@@ -112,6 +112,7 @@ class HomeProvider extends ChangeNotifier {
 
     List<SongModel> x = await onQuery.querySongs();
     for (SongModel song in x) {
+      listSongs.add(song);
       if (song.fileExtension == "mp3" || song.fileExtension == "m4aa") {
         Songs.add(song);
       }

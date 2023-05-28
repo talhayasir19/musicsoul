@@ -20,6 +20,7 @@ class Home extends StatefulWidget {
 }
 
 //Madia player object in isolation so will be used anywhere in whole app
+List<SongModel> listSongs = [];
 AudioPlayer player = AudioPlayer();
 bool played = false;
 

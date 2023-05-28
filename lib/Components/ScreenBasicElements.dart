@@ -103,51 +103,54 @@ class _BottomNavBarState extends State<BottomBar>
             Border.all(width: 0, color: const Color.fromRGBO(23, 28, 38, 0.0)),
       ),
       //main container with round corners
-      child: Container(
-          decoration: BoxDecoration(
-              border: Border.all(
-                  width: 0, color: const Color.fromRGBO(23, 28, 38, 1)),
-              color: Colors.white,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15), topRight: Radius.circular(15))),
-          width: customWidth(),
-          height: customHeight(size: 0.076),
-          child: Consumer<MainProvider>(
-              //Bottom bar elements
-              builder: ((context, provider, child) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      bottomBarItem(
-                        index: 0,
-                        labelText: "Home",
-                        icon: provider.isSelected[0]
-                            ? Icons.home
-                            : Icons.home_outlined,
-                      ),
-                      bottomBarItem(
-                        index: 1,
-                        labelText: "Albums",
-                        icon: provider.isSelected[1]
-                            ? Icons.folder
-                            : Icons.folder_outlined,
-                      ),
-                      bottomBarItem(
-                        index: 2,
-                        labelText: "Playlists",
-                        icon: provider.isSelected[2]
-                            ? Icons.playlist_add_check_circle_rounded
-                            : Icons.playlist_add_check,
-                      ),
-                      bottomBarItem(
-                        index: 3,
-                        labelText: "Favourites",
-                        icon: provider.isSelected[3]
-                            ? Icons.favorite
-                            : Icons.favorite_border_outlined,
-                      ),
-                    ],
-                  )))),
+      child: UnconstrainedBox(
+        child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(
+                    width: 0, color: const Color.fromRGBO(23, 28, 38, 1)),
+                color: Colors.white,
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15))),
+            width: customWidth(),
+            height: customHeight(size: 0.076),
+            child: Consumer<MainProvider>(
+                //Bottom bar elements
+                builder: ((context, provider, child) => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        bottomBarItem(
+                          index: 0,
+                          labelText: "Home",
+                          icon: provider.isSelected[0]
+                              ? Icons.home
+                              : Icons.home_outlined,
+                        ),
+                        bottomBarItem(
+                          index: 1,
+                          labelText: "Albums",
+                          icon: provider.isSelected[1]
+                              ? Icons.folder
+                              : Icons.folder_outlined,
+                        ),
+                        bottomBarItem(
+                          index: 2,
+                          labelText: "Playlists",
+                          icon: provider.isSelected[2]
+                              ? Icons.playlist_add_check_circle_rounded
+                              : Icons.playlist_add_check,
+                        ),
+                        bottomBarItem(
+                          index: 3,
+                          labelText: "Favourites",
+                          icon: provider.isSelected[3]
+                              ? Icons.favorite
+                              : Icons.favorite_border_outlined,
+                        ),
+                      ],
+                    )))),
+      ),
     );
   }
 

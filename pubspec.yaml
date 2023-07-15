@@ -37,15 +37,15 @@ dependencies:
   cupertino_icons: ^1.0.2
   just_audio: ^0.9.31
   provider: ^6.0.5
- 
+
   volume_controller: ^2.0.6
-  
+
   font_awesome_flutter: ^10.4.0
   auto_size_text: ^3.0.0
   animated_text_kit: ^4.2.2
   flutter_neumorphic: ^3.2.0
-
-  
+  sqflite: ^2.2.8+4
+  string_validator: ^1.0.0
 
 dev_dependencies:
   on_audio_query: ^2.7.0

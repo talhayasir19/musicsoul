@@ -1,15 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+
 import '../../Components/ScreenBasicElements.dart';
 import '../../Provider/AlbumProvider.dart';
-import 'AlbumSongs Screen/AlbumSongs.dart';
+import '../Albums Screen/AlbumSongs Screen/AlbumSongs.dart';
+import 'PlaylistSongs Screen/PlaylistSongs.dart';
 
-class SongsAlbumWidget extends Column {
+class SongsPlaylistWidget extends Column {
   BuildContext context;
-  AlbumProvider albumProvider;
+  AlbumProvider? albumProvider;
+  String name;
   int index;
-  SongsAlbumWidget(
-      {required this.context, required this.albumProvider, required this.index})
+  SongsPlaylistWidget(
+      {required this.context,
+      this.albumProvider,
+      required this.index,
+      required this.name})
       : super(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -18,8 +24,9 @@ class SongsAlbumWidget extends Column {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) {
-                    return AlbumSongsScreen(
-                      album: albumProvider.listAlbums[index].album,
+                    return PlayListSongsScreen(
+                      playlist: name.replaceAll(" ", ""),
+                      displayName: name,
                     );
                   },
                 ));
@@ -50,7 +57,8 @@ class SongsAlbumWidget extends Column {
                   padding: EdgeInsets.only(top: 5, bottom: 2),
                   //text showing Album name
                   child: AutoSizeText(
-                    albumProvider.listAlbums[index].album,
+                    name,
+                    //  albumProvider.listAlbums[index].album,
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     style: TextStyle(
@@ -61,7 +69,8 @@ class SongsAlbumWidget extends Column {
                 ),
                 //Text showing number of items in the album
                 Text(
-                  "${albumProvider.listAlbums[index].numOfSongs} items",
+                  //  "${albumProvider.listAlbums[index].numOfSongs} items",
+                  "16 items",
                   style: TextStyle(
                       fontSize: customFontSize(size: 0.026),
                       color: const Color.fromARGB(255, 131, 128, 128)),

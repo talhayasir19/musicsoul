@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../../../Components/MediaPlayer.dart';
 import '../../../Provider/HomeProvider.dart';
+import '../../../Provider/MediaPlayerProvider.dart';
 import 'AlbumsSongsWidgets.dart';
 
 class AlbumSongsScreen extends StatelessWidget {
@@ -54,16 +55,18 @@ class _AlbumSongsState extends State<AlbumSongs> {
 
   @override
   Widget build(BuildContext context) {
-    // albumSongsProvider =
-    //     Provider.of<AlbumSongsProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: Color.fromRGBO(224, 223, 223, 1),
+      backgroundColor: const Color.fromRGBO(224, 223, 223, 1),
       body: SizedBox(
+        //Top stack because we have to add the songs on the clipper
         child: Stack(
           children: [
+            //This stack because we have to had two clippers on the top of each other the clipper
+
             Stack(
               alignment: Alignment.center,
               children: [
+                //Clipper which will create white shade is on bottom
                 ClipPath(
                   clipper: UpDownClipperShade(),
                   child: Container(
@@ -72,12 +75,14 @@ class _AlbumSongsState extends State<AlbumSongs> {
                     height: customClientHeight(size: 0.28),
                   ),
                 ),
+                //Second clipper on top which will create the curve type shape
                 ClipPath(
                   clipper: UpDownClipper(),
                   child: Container(
-                    color: Color.fromRGBO(23, 28, 38, 1),
+                    color: const Color.fromRGBO(23, 28, 38, 1),
                     width: customWidth(),
                     height: customClientHeight(size: 0.28),
+                    //In center there are two text widgets showing album name and number of items
                     child: Center(
                         child: Padding(
                       padding: EdgeInsets.only(
@@ -88,12 +93,13 @@ class _AlbumSongsState extends State<AlbumSongs> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          //text showing album name
                           AutoSizeText(
                             widget.albumName,
                             minFontSize: 16,
                             maxLines: 1,
                             style: TextStyle(
-                                shadows: [
+                                shadows: const [
                                   Shadow(
                                     color: Color.fromARGB(255, 151, 145, 145),
                                     blurRadius: 8,
@@ -105,13 +111,14 @@ class _AlbumSongsState extends State<AlbumSongs> {
                           Consumer<AlbumSongsProvider>(
                             builder: (context, value, child) => Padding(
                               padding: const EdgeInsets.only(top: 2, left: 2),
+                              //Text showing number of songs in the album
                               child: AutoSizeText(
-                                value.listAlbumSongs.length.toString() +
-                                    " items",
+                                "${value.listAlbumSongs.length} items",
                                 minFontSize: 12,
                                 maxLines: 1,
                                 style: TextStyle(
-                                    color: Color.fromARGB(255, 173, 168, 168),
+                                    color: const Color.fromARGB(
+                                        255, 173, 168, 168),
                                     fontSize: customFontSize(size: 0.008)),
                               ),
                             ),
@@ -138,9 +145,17 @@ class _AlbumSongsState extends State<AlbumSongs> {
                               albumSongsProvider: albumSongsProvider,
                               songs: albumSongsProvider.listAlbumSongs,
                               index: index, onClick: (() {
-                            // context.read<MediaPlayerProvider>().resetIcon();
-                            // _homeProvider.playSongAnimation(
-                            //     index: index, isFirst: true);
+                            //click listner
+                            //First reset icon so when song will start icon will be on play state
+                            context.read<MediaPlayerProvider>().resetIcon();
+                            //setting songs for media player
+                            context
+                                .read<MediaPlayerProvider>()
+                                .setSongs(albumSongsProvider.listAlbumSongs);
+                            //starting circular animation on home screen
+                            context
+                                .read<HomeProvider>()
+                                .playSongAnimation(index: index, isFirst: true);
                           }))
                         ]);
                       }));
@@ -153,33 +168,5 @@ class _AlbumSongsState extends State<AlbumSongs> {
         ),
       ),
     );
-  }
-}
-
-//Clipper for clipping top area from bottom
-class UpDownClipperShade extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    double width = size.width;
-    double height = size.height;
-    double centerWidth = width / 2;
-    double centerHeight = height / 2;
-    Path path = Path();
-    path.moveTo(0, height * 0.52);
-    path.quadraticBezierTo(
-        width * 0.02, height * 0.8, width * 0.35, height * 0.78);
-    path.lineTo(width * 0.7, height * 0.78);
-    path.quadraticBezierTo(width, height * 0.78, width, height);
-    path.lineTo(width, 0);
-    path.lineTo(0, 0);
-
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    // TODO: implement shouldReclip
-    return true;
   }
 }

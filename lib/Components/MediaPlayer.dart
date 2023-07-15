@@ -453,7 +453,7 @@ SizedBox songSlider() {
               thumbColor: Colors.green,
               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8)),
           child: Slider(
-              max: player.duration?.inSeconds.toDouble() ?? 50,
+              max: (player.duration!.inSeconds).roundToDouble(),
               activeColor: const Color.fromRGBO(51, 145, 151, 1),
               inactiveColor: const Color.fromRGBO(17, 17, 20, 1),
               value: mediaPlayerProvider.songPosition.toDouble(),

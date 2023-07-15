@@ -1,6 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class MediaPlayerProvider extends ChangeNotifier {
+  List<SongModel> mediaSongs = [];
+  bool load = false;
+  late OnAudioQuery onQuery;
+
+  int? currentIndex;
+  bool isPlayer = false;
+  //setting media player songs
+  void setSongs(List<SongModel> songs) {
+    // mediaSongs.clear();
+    mediaSongs = songs;
+    notifyListeners();
+  }
+
+  void changeUp() {
+    if (!isPlayer) {
+      isPlayer = true;
+      notifyListeners();
+      print("Up");
+    }
+  }
+
+  void changeDown() {
+    if (isPlayer) {
+      isPlayer = false;
+      notifyListeners();
+      print("Down");
+    }
+  }
+
+  void setCurrentIndex(int index) {
+    currentIndex = index;
+    notifyListeners();
+  }
+
+  //
   IconData playpause = Icons.pause;
   double volume = 0.0;
   int songPosition = 0;

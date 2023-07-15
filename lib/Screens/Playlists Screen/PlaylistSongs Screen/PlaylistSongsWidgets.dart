@@ -1,21 +1,19 @@
-//Tile of songs showing song details
-
 import 'package:flutter/material.dart';
-import 'package:musicsoul/Provider/AlbumProvider.dart';
-import 'package:musicsoul/Provider/AlbumSongsProvider.dart';
-import 'package:on_audio_query/on_audio_query.dart';
+import 'package:musicsoul/Provider/PlayListSongsProvider.dart';
+
 import '../../../Components/ScreenBasicElements.dart';
 import '../../Home Screen/homeWidgets.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 Widget songTile(BuildContext context,
     {required List<SongModel> songs,
-    AlbumSongsProvider? albumSongsProvider,
+    required PlayListSongsProvider playListSongsProvider,
     required int index,
     required VoidCallback onClick}) {
   return InkWell(
     onTap: (() {
       playSong(context,
-          Songs: albumSongsProvider!.listAlbumSongs, index: index);
+          Songs: playListSongsProvider.playListSongList.toList(), index: index);
       //for playing animation
       onClick();
     }),

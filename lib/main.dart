@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:musicsoul/Provider/MediaPlayerProvider.dart';
 import 'package:musicsoul/Screens/Albums%20Screen/AlbumSongs%20Screen/AlbumSongs.dart';
+import 'package:musicsoul/Screens/Playlists%20Screen/Playlists.dart';
 import 'package:provider/provider.dart';
+import 'Components/MediaPlayer.dart';
 import 'Components/ScreenBasicElements.dart';
+import 'Provider/AlbumProvider.dart';
+import 'Provider/HomeProvider.dart';
 import 'Provider/MainProvider.dart';
 import 'Screens/Albums Screen/Albums.dart';
 import 'Screens/Home Screen/home.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,8 +18,20 @@ void main() {
 
 int indexSelected = 0;
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
+  late MediaPlayerProvider mediaPlayerProvider;
+
+  //  late Tween<double> circularTween, triggerTweeen;
+  final circularTween = Tween<double>(begin: 0, end: 2000);
+
+  final triggerTween = Tween<double>(begin: 0, end: 20);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +48,15 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (context) => MediaPlayerProvider(),
-          )
+          ),
+          ChangeNotifierProvider(
+            create: (context) => HomeProvider(
+                vsync: this,
+                cduration: const Duration(seconds: 1500),
+                tduration: const Duration(milliseconds: 400),
+                circlularTween: circularTween,
+                triggerTween: triggerTween),
+          ),
         ],
         child: const HomePage(),
       ),
@@ -49,18 +74,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Widget home;
   late List<Widget> screens;
+  //Media player
+  late DraggableScrollableController dcontroller;
+  late HomeProvider homeProvider;
+  late MediaPlayerProvider mediaPlayerProvider;
 
   @override
   void initState() {
     super.initState();
+    dcontroller = DraggableScrollableController();
 
     screens = [
       const Home(),
       WillPopScope(
         onWillPop: () async =>
-            !await AlbumScreen.AlbumNavigtorKey.currentState!.maybePop(),
+            !await Albums.AlbumNavigtorKey.currentState!.maybePop(),
         child: Navigator(
-          key: AlbumScreen.AlbumNavigtorKey,
+          key: Albums.AlbumNavigtorKey,
           initialRoute: Albums.pageName,
           onGenerateRoute: (settings) {
             if (settings.name == Albums.pageName) {
@@ -68,12 +98,30 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => const AlbumScreen(),
               );
             } else {
-              return MaterialPageRoute(builder: (context) => AlbumScreen());
+              return MaterialPageRoute(
+                  builder: (context) => const AlbumScreen());
             }
           },
         ),
       ),
-      const Text("Playlists"),
+      WillPopScope(
+        onWillPop: () async =>
+            !await Playlists.PlaylistsNavigtorKey.currentState!.maybePop(),
+        child: Navigator(
+          key: Playlists.PlaylistsNavigtorKey,
+          initialRoute: Playlists.pageName,
+          onGenerateRoute: (settings) {
+            if (settings.name == Playlists.pageName) {
+              return MaterialPageRoute(
+                builder: (context) => const PlaylistScreen(),
+              );
+            } else {
+              return MaterialPageRoute(
+                  builder: (context) => const PlaylistScreen());
+            }
+          },
+        ),
+      ),
       const Text("Favourites")
     ];
   }
@@ -81,75 +129,33 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     initialize(context);
+    homeProvider = Provider.of<HomeProvider>(context, listen: true);
+    mediaPlayerProvider =
+        Provider.of<MediaPlayerProvider>(context, listen: true);
     return Scaffold(
       appBar: customAppBar(),
       drawer: const Drawer(),
       backgroundColor: const Color.fromRGBO(253, 253, 253, 1),
       //All the bottom bar screens in stack
       body: Consumer<MainProvider>(
-          builder: ((context, provider, child) => Stack(
+          builder: ((context, mainProvider, child) => Stack(
                 children: [
                   //Indexed stack for showing main screen
                   IndexedStack(
-                    index: provider.indexSelected,
+                    index: mainProvider.indexSelected,
                     children: screens,
-                    //jfajf
                   ),
-                  //Bottom media player which will be expandable
+                  //Bottom media player which will be expandable and will be shown on every screen
+                  SizedBox.expand(
+                      child: BottomExpandableMediaPlayer(
+                    dcontroller: dcontroller,
+                    mediaPlayerProvider: mediaPlayerProvider,
+                    homeProvider: homeProvider,
+                  )),
                 ],
               ))),
+      //Bottom bar
       bottomNavigationBar: const BottomBar(),
     );
   }
 }
- //Bottom Player
-//             SizedBox.expand(
-//               //draggable scrollable sheet to make it scrollable up and down
-//               child: DraggableScrollableSheet(
-//                 initialChildSize: 0.1,
-//                 minChildSize: 0.1,
-//                 expand: true,
-//                 controller: dcontroller,
-//                 snap: true,
-//                 snapSizes: const [0.1],
-//                 builder:
-//                     (BuildContext context, ScrollController scrollController) {
-//                   dcontroller.addListener(
-//                     //it changes the widget in the bottom box when scolled to some extent
-//                     () {
-//                       // if (dcontroller.size > 0.3 && dcontroller.size < 0.5) {
-//                       //   _homeProvider.changeUp();
-//                       // } else if (dcontroller.size > 0.1 &&
-//                       //     dcontroller.size < 0.3) {
-//                       //   _homeProvider.changeDown();
-//                       // }
-//                     },
-//                   );
-//                   return Consumer<HomeProvider>(
-//                     builder: ((context, homeProvider, child) =>
-//                         Transform.translate(
-//                           offset: Offset(
-//                               customWidth(size: 0),
-//                               customClientHeight(
-//                                   size: homeProvider.playerTransformValue)),
-//                           child: InkWell(
-//                               onTap: (() {}),
-//                               child: MediaPlayer(
-//                                 scrollController: scrollController,
-//                                 bgColor: defaulColor,
-//                                 isPlayer: homeProvider.isPlayer,
-//                                 //cheking is first time song is played or not
-//                                 song: played
-//                                     ? homeProvider
-//                                         .Songs[homeProvider.currentIndex!]
-//                                     : SongModel({
-//                                         "_display_name": "null",
-//                                         "artist": "null",
-//                                       }),
-//                                 homeProvider: homeProvider,
-//                               )),
-//                         )),
-//                   );
-//                 },
-//               ),
-//             ),

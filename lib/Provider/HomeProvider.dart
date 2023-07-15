@@ -14,12 +14,13 @@ class HomeProvider extends ChangeNotifier {
   TickerProvider vsync;
   Duration cduration, tduration;
   List<SongModel> Songs = [];
+
   bool load = false;
   late OnAudioQuery onQuery;
   AnimationController circularController, triggerController;
   Tween<double> circlularTween, triggerTween;
   late Animation<double> cAnimation, tAnimation;
-  int? currentIndex;
+  int currentIndex = 0;
   double playerTransformValue = 0.1;
   //for changing widget when scrolling
   bool isPlayer = false;
@@ -50,6 +51,12 @@ class HomeProvider extends ChangeNotifier {
 
   void setCurrentIndex(int index) {
     currentIndex = index;
+    notifyListeners();
+  }
+
+  //set list of songs
+  void setSongs(List<SongModel> songs) {
+    Songs = songs;
     notifyListeners();
   }
 
@@ -88,7 +95,7 @@ class HomeProvider extends ChangeNotifier {
     circularController.forward();
     triggerController.forward();
     if (isFirst!) {
-      currentIndex = index;
+      currentIndex = index!;
     }
 
     played = true;
@@ -101,10 +108,6 @@ class HomeProvider extends ChangeNotifier {
     triggerController.reverse();
   }
 
-  void loader() {
-    load = true;
-    notifyListeners();
-  }
   //Function to get songs
 
   void getSongs() async {

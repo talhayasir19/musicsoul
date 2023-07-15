@@ -1,21 +1,19 @@
-//Tile of songs showing song details
-
 import 'package:flutter/material.dart';
-import 'package:musicsoul/Provider/AlbumProvider.dart';
 import 'package:musicsoul/Provider/AlbumSongsProvider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import '../../../Components/ScreenBasicElements.dart';
-import '../../Home Screen/homeWidgets.dart';
+import '../../../../Components/ScreenBasicElements.dart';
+import '../../../../Provider/AddNewSongsProvider.dart';
+import '../../../Home Screen/homeWidgets.dart';
 
 Widget songTile(BuildContext context,
     {required List<SongModel> songs,
-    AlbumSongsProvider? albumSongsProvider,
+    required List<bool> listCheck,
     required int index,
+    required AddNewSongsProvider addNewSongsProvider,
     required VoidCallback onClick}) {
   return InkWell(
     onTap: (() {
-      playSong(context,
-          Songs: albumSongsProvider!.listAlbumSongs, index: index);
+      //   playSong(context, Songs: addNewSongsProvider.listSongs, index: index);
       //for playing animation
       onClick();
     }),
@@ -88,7 +86,18 @@ Widget songTile(BuildContext context,
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.all(7.0),
-                          child: Image.asset("Assets/icons/dots.png"),
+                          child: Checkbox(
+                            value: listCheck[index],
+                            onChanged: (value) {
+                              if (value!) {
+                                addNewSongsProvider.setChecked(index);
+                                addNewSongsProvider.increment();
+                              } else {
+                                addNewSongsProvider.setUnChecked(index);
+                                addNewSongsProvider.decrement();
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -99,58 +108,4 @@ Widget songTile(BuildContext context,
       ),
     ),
   );
-}
-
-//Clipper for clipping top area from bottom
-class UpDownClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    double width = size.width;
-    double height = size.height;
-    double centerWidth = width / 2;
-    double centerHeight = height / 2;
-    Path path = Path();
-    path.moveTo(0, height * 0.52);
-    path.quadraticBezierTo(
-        width * 0.02, height * 0.75, width * 0.35, height * 0.75);
-    path.lineTo(width * 0.7, height * 0.75);
-    path.quadraticBezierTo(width, height * 0.75, width, height);
-    path.lineTo(width, 0);
-    path.lineTo(0, 0);
-
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return true;
-  }
-}
-
-//Clipper bottom shade which will show the white color shade on the bottom
-class UpDownClipperShade extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    double width = size.width;
-    double height = size.height;
-    double centerWidth = width / 2;
-    double centerHeight = height / 2;
-    Path path = Path();
-    path.moveTo(0, height * 0.52);
-    path.quadraticBezierTo(
-        width * 0.02, height * 0.8, width * 0.35, height * 0.78);
-    path.lineTo(width * 0.7, height * 0.78);
-    path.quadraticBezierTo(width, height * 0.78, width, height);
-    path.lineTo(width, 0);
-    path.lineTo(0, 0);
-
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return true;
-  }
 }

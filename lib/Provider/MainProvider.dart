@@ -2,8 +2,6 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 
 class MainProvider extends ChangeNotifier {
-  //Animation elements
-
   int indexSelected = 0;
   List<bool> isSelected = [true, false, false, false];
   void setSelected(int index) {

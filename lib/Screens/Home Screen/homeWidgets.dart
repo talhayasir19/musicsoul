@@ -278,6 +278,7 @@ void playSong(BuildContext context,
     {required List<SongModel> Songs, required int index}) async {
   player.dispose();
   player = AudioPlayer();
+  //Provider.of<HomeProvider>(context).setSongs(Songs);
   // Define the playlist
   final playlist = ConcatenatingAudioSource(
       // Start loading next item just before reaching it

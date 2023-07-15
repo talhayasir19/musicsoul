@@ -10,7 +10,10 @@ import 'package:musicsoul/Provider/HomeProvider.dart';
 import 'package:musicsoul/Provider/MainProvider.dart';
 import 'package:musicsoul/Provider/MediaPlayerProvider.dart';
 import 'package:provider/provider.dart';
+import '../Screens/Home Screen/home.dart';
 import '../main.dart';
+import 'package:on_audio_query/on_audio_query.dart';
+import 'MediaPlayer.dart';
 
 late Size size;
 late double screenWidth,
@@ -58,10 +61,10 @@ class customAppBar extends AppBar {
             style: TextStyle(fontFamily: "Trajan Pro "),
           ),
           actions: [
-            Padding(
-              padding: EdgeInsets.only(right: customWidth(size: 0.03)),
-              child: const Icon(Icons.search),
-            )
+            // Padding(
+            //   padding: EdgeInsets.only(right: customWidth(size: 0.03)),
+            //   child: const Icon(Icons.search),
+            // )
           ],
         );
 }
@@ -276,5 +279,58 @@ class SongOptionsMenu extends Container {
               ),
             ],
           ),
+        );
+}
+
+//Bottom expandable media player
+class BottomExpandableMediaPlayer extends DraggableScrollableSheet {
+  DraggableScrollableController dcontroller;
+  MediaPlayerProvider mediaPlayerProvider;
+  HomeProvider homeProvider;
+  BottomExpandableMediaPlayer(
+      {required this.dcontroller,
+      required this.mediaPlayerProvider,
+      required this.homeProvider})
+      : super(
+          initialChildSize: 0.1,
+          minChildSize: 0.1,
+          expand: true,
+          controller: dcontroller,
+          snap: true,
+          snapSizes: const [0.1],
+          builder: (BuildContext context, ScrollController scrollController) {
+            dcontroller.addListener(
+              //it changes the widget in the bottom box when scolled to some extent
+              () {
+                if (dcontroller.size > 0.3 && dcontroller.size < 0.5) {
+                  mediaPlayerProvider.changeUp();
+                } else if (dcontroller.size > 0.1 && dcontroller.size < 0.3) {
+                  mediaPlayerProvider.changeDown();
+                }
+              },
+            );
+            return Consumer<MediaPlayerProvider>(
+              builder: ((context, mediaPlayerProvider, child) =>
+                  Transform.translate(
+                      offset: Offset(
+                          customWidth(size: 0),
+                          customClientHeight(
+                              size: homeProvider.playerTransformValue)),
+                      child: MediaPlayer(
+                        scrollController: scrollController,
+                        bgColor: defaulColor,
+                        isPlayer: mediaPlayerProvider.isPlayer,
+                        //cheking is first time song is played or not
+                        song: played
+                            ? mediaPlayerProvider
+                                .mediaSongs[homeProvider.currentIndex]
+                            : SongModel({
+                                "_display_name": "null",
+                                "artist": "null",
+                              }),
+                        homeProvider: homeProvider,
+                      ))),
+            );
+          },
         );
 }

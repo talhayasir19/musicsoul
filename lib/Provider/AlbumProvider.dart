@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AlbumProvider extends ChangeNotifier {
   late List<AlbumModel> listAlbums;
@@ -8,7 +9,13 @@ class AlbumProvider extends ChangeNotifier {
     getAlbums();
   }
   void getAlbums() async {
-    listAlbums = await OnAudioQuery().queryAlbums();
+    PermissionStatus status = await Permission.audio.request();
+    if (status.isPermanentlyDenied) {
+      await Permission.audio.request();
+    }
+    if (status.isGranted) {
+      listAlbums = await OnAudioQuery().queryAlbums();
+    }
     isLoad = true;
     notifyListeners();
   }

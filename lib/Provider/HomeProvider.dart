@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:musicsoul/Components/MediaPlayer.dart';
 
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../Screens/Home Screen/home.dart';
 
@@ -112,12 +113,17 @@ class HomeProvider extends ChangeNotifier {
 
   void getSongs() async {
     onQuery = OnAudioQuery();
-
-    List<SongModel> x = await onQuery.querySongs();
-    for (SongModel song in x) {
-      listSongs.add(song);
-      if (song.fileExtension == "mp3" || song.fileExtension == "m4aa") {
-        Songs.add(song);
+    PermissionStatus status = await Permission.audio.request();
+    if (status.isPermanentlyDenied) {
+      await Permission.audio.request();
+    }
+    if (status.isGranted) {
+      List<SongModel> x = await onQuery.querySongs();
+      for (SongModel song in x) {
+        listSongs.add(song);
+        if (song.fileExtension == "mp3" || song.fileExtension == "m4aa") {
+          Songs.add(song);
+        }
       }
     }
     load = true;
